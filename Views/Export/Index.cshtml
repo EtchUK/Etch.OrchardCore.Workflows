@@ -15,10 +15,10 @@
                     <div class="related">
                         <a asp-action="Edit" asp-route-id="@entry.WorkflowType.Id" asp-controller="WorkflowType" asp-route-returnUrl="@FullRequestPath" asp-route-area="OrchardCore.Workflows" class="btn btn-primary btn-sm">@T["Edit"]</a>
                         <a asp-action="EditProperties" asp-route-id="@entry.WorkflowType.Id" asp-controller="WorkflowType" asp-route-returnUrl="@FullRequestPath" asp-route-area="OrchardCore.Workflows" class="btn btn-primary btn-sm">@T["Properties"]</a>
-                        <a asp-action="Export" asp-route-id="@entry.WorkflowType.Id" asp-route-returnUrl="@FullRequestPath" class="btn btn-primary btn-sm">@T["Export"]</a>
+                        <a asp-action="Preview" asp-route-id="@entry.WorkflowType.Id" asp-route-returnUrl="@FullRequestPath" class="btn btn-primary btn-sm">@T["Export"]</a>
                     </div>
 
-                    <a asp-action="Export" asp-route-id="@entry.WorkflowType.Id" asp-route-returnUrl="@FullRequestPath">@entry.Name</a>
+                    <a asp-action="Preview" asp-route-id="@entry.WorkflowType.Id" asp-route-returnUrl="@FullRequestPath">@entry.Name</a>
 
                     <div class="metadata">
                         @if (!entry.WorkflowType.IsEnabled)

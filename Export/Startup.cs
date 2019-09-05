@@ -22,6 +22,13 @@ namespace Etch.OrchardCore.Workflows.Export
                 template: "Admin/Workflows/Export",
                 defaults: new { controller = "Export", action = "Index" }
             );
+
+            routes.MapAreaRoute(
+                name: "WorkflowExportPreview",
+                areaName: "Etch.OrchardCore.Workflows",
+                template: "Admin/Workflows/Export/{id}/Preview",
+                defaults: new { controller = "Export", action = "Preview" }
+            );
         }
 
         public override void ConfigureServices(IServiceCollection services)

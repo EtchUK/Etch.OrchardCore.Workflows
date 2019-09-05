@@ -3,6 +3,7 @@ using Etch.OrchardCore.Workflows.Export.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json.Linq;
 using OrchardCore.Admin;
 using OrchardCore.DisplayManagement;
 using OrchardCore.Modules;
@@ -11,6 +12,7 @@ using OrchardCore.Settings;
 using OrchardCore.Workflows.Indexes;
 using OrchardCore.Workflows.Models;
 using OrchardCore.Workflows.ViewModels;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YesSql;
@@ -96,6 +98,41 @@ namespace Etch.OrchardCore.Workflows.Controllers
 
         #endregion Index
 
+        #region Preview
+
+        public async Task<IActionResult> Preview(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var workflowType = await _session.GetAsync<WorkflowType>(id.Value);
+
+            if (workflowType == null)
+            {
+                return NotFound();
+            }
+
+            var workflowInstancesQuery = _session.Query<Workflow, WorkflowIndex>(x => x.WorkflowTypeId == workflowType.WorkflowTypeId)
+                .OrderByDescending(x => x.CreatedUtc);
+
+            var instancesCount = await workflowInstancesQuery.CountAsync();
+            var preview = await workflowInstancesQuery.FirstOrDefaultAsync();
+
+            var model = new PreviewWorkflowExportViewModel
+            {
+                Name = workflowType.Name,
+                InstanceCount = instancesCount,
+                PreviewOutput = GetPreviewOutput(preview),
+                WorkflowTypeId = id.Value
+            };
+
+            return View(model);
+        }
+
+        #endregion Preview
+
         #endregion Actions
 
         #region Events
@@ -113,5 +150,23 @@ namespace Etch.OrchardCore.Workflows.Controllers
         }
 
         #endregion Events
+
+        #region Private Methods
+
+        private IDictionary<string, string> GetPreviewOutput(Workflow workflow)
+        {
+            if (workflow?.State == null)
+            {
+                return null;
+            }
+            var output = workflow.State.Value<JObject>("Output");
+            if (output == null)
+            {
+                return null;
+            }
+            return output.ToObject<IDictionary<string, string>>();
+        }
+
+        #endregion Private Methods
     }
 }
