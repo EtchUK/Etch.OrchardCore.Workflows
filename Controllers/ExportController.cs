@@ -217,21 +217,28 @@ namespace Etch.OrchardCore.Workflows.Controllers
         private IDictionary<string, string> GetOutput(Workflow workflow)
         {
             var result = (IDictionary<string, string>)new Dictionary<string, string>();
+
             if (workflow == null)
             {
                 return result;
             }
+
             result.Add(ExportConstants.CreatedAtUTCColumnName, workflow.CreatedUtc.ToString());
+
             if (workflow.State == null)
             {
                 return result;
             }
+
             var output = workflow.State.Value<JObject>("Output");
+
             if (output == null)
             {
                 return result;
             }
+
             var outputDict = output.ToObject<IDictionary<string, string>>();
+
             // Merge dictionaries
             return new[] { result, outputDict }.SelectMany(dict => dict)
                          .ToLookup(pair => pair.Key, pair => pair.Value)
