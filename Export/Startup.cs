@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Etch.OrchardCore.Workflows.Export.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using OrchardCore.Modules;
@@ -33,6 +34,7 @@ namespace Etch.OrchardCore.Workflows.Export
 
         public override void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IExportService, ExportService>();
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<IPermissionProvider, Permissions>();
         }

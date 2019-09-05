@@ -1,12 +1,14 @@
-﻿using CsvHelper;
-using Etch.OrchardCore.Workflows.Export;
+﻿using Etch.OrchardCore.Workflows.Export;
+using Etch.OrchardCore.Workflows.Export.Services;
 using Etch.OrchardCore.Workflows.Export.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Logging;
 using OrchardCore.Admin;
 using OrchardCore.DisplayManagement;
+using OrchardCore.DisplayManagement.Notify;
 using OrchardCore.Modules;
 using OrchardCore.Navigation;
 using OrchardCore.Settings;
@@ -14,8 +16,6 @@ using OrchardCore.Workflows.Indexes;
 using OrchardCore.Workflows.Models;
 using OrchardCore.Workflows.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using YesSql;
@@ -30,12 +30,16 @@ namespace Etch.OrchardCore.Workflows.Controllers
         #region Dependencies
 
         private readonly IAuthorizationService _authorizationService;
+        private readonly IExportService _exportService;
+        private readonly ILogger _logger;
+        private readonly INotifier _notifier;
         private readonly ISession _session;
         private readonly ISiteService _siteService;
 
         #region Properties
 
         private dynamic New { get; }
+        public IHtmlLocalizer TH { get; set; }
 
         #endregion Properties
 
@@ -45,11 +49,18 @@ namespace Etch.OrchardCore.Workflows.Controllers
 
         public ExportController(
             IAuthorizationService authorizationService,
+            IExportService exportService,
+            IHtmlLocalizer<ExportController> htmlLocalizer,
+            ILogger<ExportController> logger,
+            INotifier notifier,
             ISession session,
             IShapeFactory shapeFactory,
             ISiteService siteService)
         {
             _authorizationService = authorizationService;
+            _exportService = exportService;
+            TH = htmlLocalizer;
+            _logger = logger;
             _session = session;
             New = shapeFactory;
             _siteService = siteService;
@@ -127,7 +138,7 @@ namespace Etch.OrchardCore.Workflows.Controllers
             {
                 Name = workflowType.Name,
                 InstanceCount = instancesCount,
-                PreviewOutput = GetOutput(preview),
+                PreviewOutput = _exportService.GetOutput(preview),
                 WorkflowTypeId = id.Value
             };
 
@@ -158,38 +169,17 @@ namespace Etch.OrchardCore.Workflows.Controllers
 
             var instances = await query.ListAsync();
 
-            var rows = instances.Select(x => GetOutput(x)).ToList();
-
-            var memoryStream = new MemoryStream();
-
-            var streamWriter = new StreamWriter(memoryStream);
-
-            var csvWriter = new CsvWriter(streamWriter);
-
-            var headers = rows.SelectMany(x => x.Keys).Distinct();
-
-            foreach (var header in headers)
+            try
             {
-                csvWriter.WriteField(header);
+                var stream = await _exportService.GetExportFileAsStreamAsync(instances);
+                return File(stream, "text/csv", $"{workflowType.Name}-Export-{DateTime.UtcNow:dd-MM-yyyy-HHmm}.csv");
             }
-            await csvWriter.NextRecordAsync();
-
-            foreach (var row in rows)
+            catch (Exception e)
             {
-                foreach (var header in headers)
-                {
-                    csvWriter.WriteField(row.ContainsKey(header) ? row[header] ?? "" : "");
-                }
-                await csvWriter.NextRecordAsync();
+                _notifier.Error(TH["Error creating export file, please try again."]);
+                _logger.LogError(e, "Error creating file for Workflow Export");
+                return RedirectToAction("Preview", new { id });
             }
-
-            await csvWriter.FlushAsync();
-
-            await streamWriter.FlushAsync();
-
-            memoryStream.Seek(0, SeekOrigin.Begin);
-
-            return File(memoryStream, "text/csv", $"{workflowType.Name}-Export-{DateTime.UtcNow:dd-MM-yyyy-HHmm}.csv");
         }
 
         #endregion Export
@@ -211,40 +201,5 @@ namespace Etch.OrchardCore.Workflows.Controllers
         }
 
         #endregion Events
-
-        #region Private Methods
-
-        private IDictionary<string, string> GetOutput(Workflow workflow)
-        {
-            var result = (IDictionary<string, string>)new Dictionary<string, string>();
-
-            if (workflow == null)
-            {
-                return result;
-            }
-
-            result.Add(ExportConstants.CreatedAtUTCColumnName, workflow.CreatedUtc.ToString());
-
-            if (workflow.State == null)
-            {
-                return result;
-            }
-
-            var output = workflow.State.Value<JObject>("Output");
-
-            if (output == null)
-            {
-                return result;
-            }
-
-            var outputDict = output.ToObject<IDictionary<string, string>>();
-
-            // Merge dictionaries
-            return new[] { result, outputDict }.SelectMany(dict => dict)
-                         .ToLookup(pair => pair.Key, pair => pair.Value)
-                         .ToDictionary(group => group.Key, group => group.First()); ;
-        }
-
-        #endregion Private Methods
     }
 }
