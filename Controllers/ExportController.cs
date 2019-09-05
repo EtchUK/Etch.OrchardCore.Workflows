@@ -1,4 +1,5 @@
-﻿using Etch.OrchardCore.Workflows.Export;
+﻿using CsvHelper;
+using Etch.OrchardCore.Workflows.Export;
 using Etch.OrchardCore.Workflows.Export.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,9 @@ using OrchardCore.Settings;
 using OrchardCore.Workflows.Indexes;
 using OrchardCore.Workflows.Models;
 using OrchardCore.Workflows.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using YesSql;
@@ -124,7 +127,7 @@ namespace Etch.OrchardCore.Workflows.Controllers
             {
                 Name = workflowType.Name,
                 InstanceCount = instancesCount,
-                PreviewOutput = GetPreviewOutput(preview),
+                PreviewOutput = GetOutput(preview),
                 WorkflowTypeId = id.Value
             };
 
@@ -132,6 +135,64 @@ namespace Etch.OrchardCore.Workflows.Controllers
         }
 
         #endregion Preview
+
+        #region Export
+
+        [HttpPost]
+        public async Task<IActionResult> Export(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var workflowType = await _session.GetAsync<WorkflowType>(id.Value);
+
+            if (workflowType == null)
+            {
+                return NotFound();
+            }
+
+            var query = _session.Query<Workflow, WorkflowIndex>(x => x.WorkflowTypeId == workflowType.WorkflowTypeId)
+                .OrderByDescending(x => x.CreatedUtc);
+
+            var instances = await query.ListAsync();
+
+            var rows = instances.Select(x => GetOutput(x)).ToList();
+
+            var memoryStream = new MemoryStream();
+
+            var streamWriter = new StreamWriter(memoryStream);
+
+            var csvWriter = new CsvWriter(streamWriter);
+
+            var headers = rows.SelectMany(x => x.Keys).Distinct();
+
+            foreach (var header in headers)
+            {
+                csvWriter.WriteField(header);
+            }
+            await csvWriter.NextRecordAsync();
+
+            foreach (var row in rows)
+            {
+                foreach (var header in headers)
+                {
+                    csvWriter.WriteField(row.ContainsKey(header) ? row[header] ?? "" : "");
+                }
+                await csvWriter.NextRecordAsync();
+            }
+
+            await csvWriter.FlushAsync();
+
+            await streamWriter.FlushAsync();
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            return File(memoryStream, "text/csv", $"{workflowType.Name}-Export-{DateTime.UtcNow:dd-MM-yyyy-HHmm}.csv");
+        }
+
+        #endregion Export
 
         #endregion Actions
 
@@ -153,18 +214,28 @@ namespace Etch.OrchardCore.Workflows.Controllers
 
         #region Private Methods
 
-        private IDictionary<string, string> GetPreviewOutput(Workflow workflow)
+        private IDictionary<string, string> GetOutput(Workflow workflow)
         {
-            if (workflow?.State == null)
+            var result = (IDictionary<string, string>)new Dictionary<string, string>();
+            if (workflow == null)
             {
-                return null;
+                return result;
+            }
+            result.Add(ExportConstants.CreatedAtUTCColumnName, workflow.CreatedUtc.ToString());
+            if (workflow.State == null)
+            {
+                return result;
             }
             var output = workflow.State.Value<JObject>("Output");
             if (output == null)
             {
-                return null;
+                return result;
             }
-            return output.ToObject<IDictionary<string, string>>();
+            var outputDict = output.ToObject<IDictionary<string, string>>();
+            // Merge dictionaries
+            return new[] { result, outputDict }.SelectMany(dict => dict)
+                         .ToLookup(pair => pair.Key, pair => pair.Value)
+                         .ToDictionary(group => group.Key, group => group.First()); ;
         }
 
         #endregion Private Methods

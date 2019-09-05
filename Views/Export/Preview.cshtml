@@ -5,6 +5,10 @@
 @if (Model.InstanceCount > 0)
 {
     <p>@T["{0} has {1} instances, you can see a preview of the latest outputs below.", Model.Name, Model.InstanceCount]</p>
+    <form class="mb-3" asp-action="Export" asp-route-id="@Model.WorkflowTypeId" method="post">
+        @Html.AntiForgeryToken()
+        <button class="btn btn-primary" type="submit">@T["Download export"]</button>
+    </form>
     @if (Model.PreviewOutput != null)
     {
         <ul>
