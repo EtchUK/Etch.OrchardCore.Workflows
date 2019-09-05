@@ -2,4 +2,44 @@
 
 <h1>@RenderTitleSegments(T["Export Workflow Data"])</h1>
 
-<p>@T["Select from the list of workflow types below to begin export process."]</p>
+
+@if (Model.WorkflowTypes.Any())
+{
+    <p>@T["Select from the list of workflow types below to begin export process."]</p>
+
+    <ul class="list-group">
+        @foreach (var entry in Model.WorkflowTypes)
+        {
+            <li class="list-group-item">
+                <div class="properties">
+                    <div class="related">
+                        <a asp-action="Edit" asp-route-id="@entry.WorkflowType.Id" asp-controller="WorkflowType" asp-route-returnUrl="@FullRequestPath" asp-route-area="OrchardCore.Workflows" class="btn btn-primary btn-sm">@T["Edit"]</a>
+                        <a asp-action="EditProperties" asp-route-id="@entry.WorkflowType.Id" asp-controller="WorkflowType" asp-route-returnUrl="@FullRequestPath" asp-route-area="OrchardCore.Workflows" class="btn btn-primary btn-sm">@T["Properties"]</a>
+                        <a asp-action="Export" asp-route-id="@entry.WorkflowType.Id" asp-route-returnUrl="@FullRequestPath" class="btn btn-primary btn-sm">@T["Export"]</a>
+                    </div>
+
+                    <a asp-action="Export" asp-route-id="@entry.WorkflowType.Id" asp-route-returnUrl="@FullRequestPath">@entry.Name</a>
+
+                    <div class="metadata">
+                        @if (!entry.WorkflowType.IsEnabled)
+                        {
+                            <span class="badge badge-secondary">@T["disabled"]</span>
+                        }
+                        @if (entry.WorkflowCount > 0)
+                        {
+                            <a asp-action="Index" asp-controller="Workflow" asp-route-area="OrchardCore.Workflows" asp-route-workflowtypeid="@entry.WorkflowType.Id" class="badge badge-info">@entry.WorkflowCount @T["instance(s)"])</a>
+                        }
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+
+    @await DisplayAsync(Model.Pager)
+}
+else
+{
+    <div class="alert alert-info" role="alert">
+        @T["<strong>Nothing here!</strong> There are no workflow types to export from at the moment."]
+    </div>
+}

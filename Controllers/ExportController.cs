@@ -4,8 +4,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using OrchardCore.Admin;
+using OrchardCore.DisplayManagement;
 using OrchardCore.Modules;
+using OrchardCore.Navigation;
+using OrchardCore.Settings;
+using OrchardCore.Workflows.Indexes;
+using OrchardCore.Workflows.Models;
+using OrchardCore.Workflows.ViewModels;
+using System.Linq;
 using System.Threading.Tasks;
+using YesSql;
+using YesSql.Services;
 
 namespace Etch.OrchardCore.Workflows.Controllers
 {
@@ -16,14 +25,29 @@ namespace Etch.OrchardCore.Workflows.Controllers
         #region Dependencies
 
         private readonly IAuthorizationService _authorizationService;
+        private readonly ISession _session;
+        private readonly ISiteService _siteService;
+
+        #region Properties
+
+        private dynamic New { get; }
+
+        #endregion Properties
 
         #endregion Dependencies
 
         #region Constructor
 
-        public ExportController(IAuthorizationService authorizationService)
+        public ExportController(
+            IAuthorizationService authorizationService,
+            ISession session,
+            IShapeFactory shapeFactory,
+            ISiteService siteService)
         {
             _authorizationService = authorizationService;
+            _session = session;
+            New = shapeFactory;
+            _siteService = siteService;
         }
 
         #endregion Constructor
@@ -32,9 +56,41 @@ namespace Etch.OrchardCore.Workflows.Controllers
 
         #region Index
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(PagerParameters pagerParameters)
         {
-            var model = new WorkflowExportListViewModel();
+            var siteSettings = await _siteService.GetSiteSettingsAsync();
+            var pager = new Pager(pagerParameters, siteSettings.PageSize);
+
+            var query = _session.Query<WorkflowType, WorkflowTypeIndex>()
+                .OrderBy(x => x.Name);
+
+            var count = await query.CountAsync();
+
+            var workflowTypes = await query
+                .Skip(pager.GetStartIndex())
+                .Take(pager.PageSize)
+                .ListAsync();
+            var workflowTypeIds = workflowTypes.Select(x => x.WorkflowTypeId).ToList();
+            var workflowInstances = (await _session.QueryIndex<WorkflowIndex>(x => x.WorkflowTypeId.IsIn(workflowTypeIds))
+                .ListAsync())
+                .GroupBy(x => x.WorkflowTypeId)
+                .ToDictionary(x => x.Key);
+
+            var pagerShape = (await New.Pager(pager)).TotalItemCount(count);
+
+            var model = new WorkflowExportListViewModel
+            {
+                WorkflowTypes = workflowTypes
+                .Select(x => new WorkflowTypeEntry
+                {
+                    WorkflowType = x,
+                    Id = x.Id,
+                    Name = x.Name,
+                    WorkflowCount = workflowInstances.ContainsKey(x.WorkflowTypeId) ? workflowInstances[x.WorkflowTypeId].Count() : 0
+                })
+                .ToList(),
+                Pager = pagerShape
+            };
             return View(model);
         }
 

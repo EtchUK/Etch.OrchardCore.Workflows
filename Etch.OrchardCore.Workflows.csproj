@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="OrchardCore.Workflows" Version="1.0.0-beta3-71077" />
   </ItemGroup>
 
 </Project>
