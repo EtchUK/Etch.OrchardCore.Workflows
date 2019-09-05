@@ -171,8 +171,11 @@ namespace Etch.OrchardCore.Workflows.Controllers
 
             try
             {
-                var stream = await _exportService.GetExportFileAsStreamAsync(instances);
-                return File(stream, "text/csv", $"{workflowType.Name}-Export-{DateTime.UtcNow:dd-MM-yyyy-HHmm}.csv");
+                return File(
+                    await _exportService.GetExportFileAsStreamAsync(instances),
+                    "text/csv",
+                    $"{workflowType.Name}-Export-{DateTime.UtcNow:dd-MM-yyyy-HHmm}.csv"
+                );
             }
             catch (Exception e)
             {
