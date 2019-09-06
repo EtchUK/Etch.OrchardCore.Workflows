@@ -20,7 +20,7 @@ This module provides a set features which operate independantly of each other.
 
 ### Export Workflows
 
-When enabled this feature will make a new "Export Workflows" option available in the admin menu for users with the `Export workflow data` permission (also provided by this feature).
+Adds "Export Workflows" option in the admin menu for users with the `Export workflow data` permission.
 
 The "Export Workflows" page displays a list of workflows similar to what is seen when accessing the main "Workflows" route, selecting "Export" on one of these will take the user to a "Preview" page showing them how many instances the chosen workflow has and a preview of the Outputs the latest one has.
 
@@ -36,8 +36,14 @@ Allows the user to specify multiple field names which will all be validated for 
 
 ### Form Output
 
-This feature provides a task `Set Form Outputs` which will send all entries from the form to the `Output` of the workflow with the same names as their form `input`s.
+Provides a task `Set Form Outputs` which will send all entries from the form to the `Output` of the workflow with the same names as their form `input`s.
 
-It has an option for `Prefix` which will prepend the entered string to the output keys.
+The following options are available:
 
-It also has an option for `Ignored` allowing to the user to specify fields which should not be added to the `Output`. e.g.: form validation token.
+#### Prefix
+
+Prepend the entered string to the output keys.
+
+#### Ignored
+
+Allows the user to specify fields which should not be added to the `Output`. e.g.: form validation token.
