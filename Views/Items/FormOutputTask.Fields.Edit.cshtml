@@ -1,6 +1,13 @@
 ﻿@using Etch.OrchardCore.Workflows.FormOutput.Workflows.ViewModels;
 @model FormOutputTaskViewModel
 
+<fieldset class="form-group" asp-validation-class-for="Ignored">
+    <label asp-for="Ignored">@T["Ignored fields"]</label>
+    <input asp-for="Ignored" class="form-control" autofocus="autofocus" />
+    <span asp-validation-for="Ignored"></span>
+    <span class="hint">@T["Comma separated list of field names which should not be copied to the Output."]</span>
+</fieldset>
+
 <fieldset class="form-group" asp-validation-class-for="Prefix">
     <label asp-for="Prefix">@T["Prefix"]</label>
     <input asp-for="Prefix" class="form-control" autofocus="autofocus" />

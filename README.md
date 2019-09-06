@@ -39,3 +39,5 @@ Allows the user to specify multiple field names which will all be validated for 
 This feature provides a task `Set Form Outputs` which will send all entries from the form to the `Output` of the workflow with the same names as their form `input`s.
 
 It has an option for `Prefix` which will prepend the entered string to the output keys.
+
+It also has an option for `Ignored` allowing to the user to specify fields which should not be added to the `Output`. e.g.: form validation token.
