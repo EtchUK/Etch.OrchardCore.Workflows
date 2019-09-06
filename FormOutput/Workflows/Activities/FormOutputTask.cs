@@ -3,7 +3,9 @@ using Microsoft.Extensions.Localization;
 using OrchardCore.Workflows.Abstractions.Models;
 using OrchardCore.Workflows.Activities;
 using OrchardCore.Workflows.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Etch.OrchardCore.Workflows.FormOutput.Workflows.Activities
 {
@@ -54,6 +56,12 @@ namespace Etch.OrchardCore.Workflows.FormOutput.Workflows.Activities
 
         #region Input
 
+        public string Ignored
+        {
+            get => GetProperty<string>();
+            set => SetProperty(value);
+        }
+
         public string Prefix
         {
             get => GetProperty<string>();
@@ -80,13 +88,21 @@ namespace Etch.OrchardCore.Workflows.FormOutput.Workflows.Activities
                 return Outcomes(OutcomeDone);
             }
 
+            var ignored = GetIgnoredFieldNames();
             foreach (var field in form.Keys)
             {
+                if (ignored.Any(x => string.Equals(x, field, StringComparison.OrdinalIgnoreCase)))
+                {
+                    continue;
+                }
+
                 var outputKey = field;
+
                 if (!string.IsNullOrWhiteSpace(Prefix))
                 {
                     outputKey = Prefix + outputKey;
                 }
+
                 workflowContext.Output[outputKey] = string.Join(", ", form[field].ToArray());
             }
 
@@ -101,5 +117,18 @@ namespace Etch.OrchardCore.Workflows.FormOutput.Workflows.Activities
         #endregion Actions
 
         #endregion Implementation
+
+        #region Private methods
+
+        private IList<string> GetIgnoredFieldNames()
+        {
+            if (string.IsNullOrWhiteSpace(Ignored))
+            {
+                return new List<string>();
+            }
+            return Ignored.Split(',').Select(x => x.Trim()).ToList();
+        }
+
+        #endregion Private methods
     }
 }
