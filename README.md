@@ -25,3 +25,11 @@ When enabled this feature will make a new "Export Workflows" option available in
 The "Export Workflows" page displays a list of workflows similar to what is seen when accessing the main "Workflows" route, selecting "Export" on one of these will take the user to a "Preview" page showing them how many instances the chosen workflow has and a preview of the Outputs the latest one has.
 
 Clicking 'Download export' will then return a CSV with columns for any `Output` ever specified in any Instance of this Workflow Type.
+
+### Validation
+
+This feature adds useful validation tasks for Workflows.
+
+#### Validate Multiple Fields
+
+Allows the user to specify multiple field names which will all be validated for not having empty content. The task provides `Valid` and `Invalid` outcomes as well as `Done` and will update the `ModelState` in the same way as the stock Orchard Core validate tasks.
