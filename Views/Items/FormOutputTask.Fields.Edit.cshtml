@@ -3,14 +3,14 @@
 
 <fieldset class="form-group" asp-validation-class-for="Ignored">
     <label asp-for="Ignored">@T["Ignored fields"]</label>
-    <input asp-for="Ignored" class="form-control" autofocus="autofocus" />
+    <input asp-for="Ignored" class="form-control" />
     <span asp-validation-for="Ignored"></span>
     <span class="hint">@T["Comma separated list of field names which should not be copied to the Output."]</span>
 </fieldset>
 
 <fieldset class="form-group" asp-validation-class-for="Prefix">
     <label asp-for="Prefix">@T["Prefix"]</label>
-    <input asp-for="Prefix" class="form-control" autofocus="autofocus" />
+    <input asp-for="Prefix" class="form-control" />
     <span asp-validation-for="Prefix"></span>
     <span class="hint">@T["Prefix for form entries on the output (e.g. the output name will be '<Value entered above>InputName')."]</span>
 </fieldset>
