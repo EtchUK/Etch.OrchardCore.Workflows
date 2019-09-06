@@ -17,3 +17,11 @@ using OrchardCore.Modules.Manifest;
     Dependencies = new[] { "OrchardCore.Workflows" },
     Description = "Provides export of data from workflows"
 )]
+
+[assembly: Feature(
+    Id = Constants.Features.Validation,
+    Name = "Validation",
+    Category = "Workflows",
+    Dependencies = new[] { "OrchardCore.Workflows", "OrchardCore.Forms" },
+    Description = "Adds useful validation tasks for forms"
+)]

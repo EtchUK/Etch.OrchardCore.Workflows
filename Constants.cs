@@ -5,6 +5,7 @@
         public static class Features
         {
             public const string Export = "Etch.OrchardCore.Workflows.Export";
+            public const string Validation = "Etch.OrchardCore.Workflows.Validation";
         }
     }
 }

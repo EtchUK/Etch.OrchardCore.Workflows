@@ -1,0 +1,8 @@
+﻿@using OrchardCore.Workflows.Helpers
+
+@model OrchardCore.Workflows.ViewModels.ActivityViewModel<Etch.OrchardCore.Workflows.Validation.Workflows.Activities.ValidateMultipleTask>
+
+<header>
+    <h4><i class="fa fa-shield-alt"></i>@Model.Activity.GetTitleOrDefault(() => T["Validate Multiple Form Fields"])</h4>
+</header>
+<span>@T["Validate fields: <em>{0}</em>", Model.Activity.ToValidate]</span>

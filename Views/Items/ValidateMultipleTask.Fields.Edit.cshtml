@@ -1,0 +1,16 @@
+﻿@using Etch.OrchardCore.Workflows.Validation.Workflows.ViewModels;
+@model ValidateMultipleTaskViewModel
+
+<fieldset class="form-group" asp-validation-class-for="ToValidate">
+    <label asp-for="ToValidate">@T["Fields to Validate"]</label>
+    <input type="text" asp-for="ToValidate" class="form-control" />
+    <span asp-validation-for="ToValidate"></span>
+    <span class="hint">@T["Comma separated list of form field names to validate."]</span>
+</fieldset>
+
+<fieldset class="form-group" asp-validation-class-for="ErrorMessage">
+    <label asp-for="ErrorMessage">@T["Error Message"]</label>
+    <input type="text" asp-for="ErrorMessage" class="form-control" />
+    <span asp-validation-for="ErrorMessage"></span>
+    <span class="hint">@T["The validation error message to display."]</span>
+</fieldset>
