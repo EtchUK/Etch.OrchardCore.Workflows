@@ -30,6 +30,10 @@ Clicking 'Download export' will then return a CSV with columns for any `Output` 
 
 This feature adds useful validation tasks for Workflows.
 
+#### Validate Matching Fields
+
+Allows the user to specify multiple field names which will all be validated for having matching content. The task provides `Valid` and `Invalid` outcomes as well as `Done` and will update the `ModelState` in the same way as the stock Orchard Core validate tasks.
+
 #### Validate Multiple Fields
 
 Allows the user to specify multiple field names which will all be validated for not having empty content. The task provides `Valid` and `Invalid` outcomes as well as `Done` and will update the `ModelState` in the same way as the stock Orchard Core validate tasks.

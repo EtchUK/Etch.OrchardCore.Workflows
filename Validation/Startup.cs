@@ -13,6 +13,7 @@ namespace Etch.OrchardCore.Workflows.Validation
 
         public override void ConfigureServices(IServiceCollection services)
         {
+            services.AddActivity<ValidateMatchingTask, ValidateMatchingFormDisplay>();
             services.AddActivity<ValidateMultipleTask, ValidateMultipleTaskDisplay>();
         }
 
