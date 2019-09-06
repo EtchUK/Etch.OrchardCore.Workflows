@@ -1,0 +1,8 @@
+﻿@model ActivityViewModel<FormOutputTask>
+@using OrchardCore.Workflows.Helpers
+@using OrchardCore.Workflows.ViewModels
+@using Etch.OrchardCore.Workflows.FormOutput.Workflows.Activities
+<header>
+    <h4><i class="fas fa-sign-out-alt"></i>@Model.Activity.GetTitleOrDefault(() => T["Form Outputs"])</h4>
+</header>
+<em>Send all form entries to Output</em>

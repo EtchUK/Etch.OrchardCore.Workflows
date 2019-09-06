@@ -19,6 +19,14 @@ using OrchardCore.Modules.Manifest;
 )]
 
 [assembly: Feature(
+    Id = Constants.Features.FormOutput,
+    Name = "Form Output",
+    Category = "Workflows",
+    Dependencies = new[] { "OrchardCore.Workflows" },
+    Description = "Provides a task for writing all form fields into Output properties."
+)]
+
+[assembly: Feature(
     Id = Constants.Features.Validation,
     Name = "Validation",
     Category = "Workflows",
