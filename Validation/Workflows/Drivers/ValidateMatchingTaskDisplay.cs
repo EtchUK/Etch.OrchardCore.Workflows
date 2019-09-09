@@ -4,7 +4,7 @@ using OrchardCore.Workflows.Display;
 
 namespace Etch.OrchardCore.Workflows.Validation.Workflows.Drivers
 {
-    public class ValidateMatchingFormDisplay : ActivityDisplayDriver<ValidateMatchingTask, ValidateMatchingTaskViewModel>
+    public class ValidateMatchingTaskDisplay : ActivityDisplayDriver<ValidateMatchingTask, ValidateMatchingTaskViewModel>
     {
         #region Implementation
 
