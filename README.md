@@ -14,6 +14,10 @@ This module is referencing the beta 3 build of Orchard Core ([`1.0.0-beta3-71077
 
 This module is available on our private NuGet feed, search "Etch.OrchardCore.Workflows" within NuGet package manager in order to install the module within your Orchard Core site project. Your project must be configured to use our private NuGet feed otherwise no results will be returned.
 
+If you want to give the module a try you can[download the source](https://github.com/etchuk/Etch.OrchardCore.InjectScripts/archive/master.zip) or clone the repository to your local machine. Add the project to your solution that contains an Orchard Core project and add a reference to Etch.OrchardCore.Workflows.
+
+Once the module is in a usable state we'll make it available via NuGet.
+
 ## Features
 
 This module provides a set features which operate independantly of each other.
