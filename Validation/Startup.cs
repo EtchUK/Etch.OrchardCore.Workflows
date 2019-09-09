@@ -15,6 +15,7 @@ namespace Etch.OrchardCore.Workflows.Validation
         {
             services.AddActivity<ValidateMatchingTask, ValidateMatchingTaskDisplay>();
             services.AddActivity<ValidateMultipleTask, ValidateMultipleTaskDisplay>();
+            services.AddActivity<ValidateRequiredWhenCheckedTask, ValidateRequiredWhenCheckedTaskDisplay>();
         }
 
         #endregion Implementation
