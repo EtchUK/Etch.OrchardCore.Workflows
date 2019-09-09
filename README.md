@@ -38,6 +38,10 @@ Allows the user to specify multiple field names which will all be validated for 
 
 Allows the user to specify multiple field names which will all be validated for not having empty content. The task provides `Valid` and `Invalid` outcomes as well as `Done` and will update the `ModelState` in the same way as the stock Orchard Core validate tasks.
 
+#### Validate Required When Checked
+
+Validates that multiple fields have a value when a defined checkbox field has been checked. The task provides `Valid` and `Invalid` outcomes as well as `Done` and will update the `ModelState` in the same way as the stock Orchard Core validate tasks.
+
 ### Form Output
 
 Provides a task `Set Form Outputs` which will send all entries from the form to the `Output` of the workflow with the same names as their form `input`s.
