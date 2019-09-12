@@ -6,6 +6,7 @@
         {
             public const string Export = "Etch.OrchardCore.Workflows.Export";
             public const string FormOutput = "Etch.OrchardCore.Workflows.FormOutput";
+            public const string TemplateEmail = "Etch.OrchardCore.Workflows.TemplateEmail";
             public const string Validation = "Etch.OrchardCore.Workflows.Validation";
         }
     }

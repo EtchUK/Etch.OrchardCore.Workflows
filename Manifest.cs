@@ -27,6 +27,14 @@ using OrchardCore.Modules.Manifest;
 )]
 
 [assembly: Feature(
+    Id = Constants.Features.TemplateEmail,
+    Name = "Workflow Template Email",
+    Category = "Workflows",
+    Dependencies = new[] { "OrchardCore.Workflows", "OrchardCore.Email", "OrchardCore.Templates" },
+    Description = "Provides email task that can use template."
+)]
+
+[assembly: Feature(
     Id = Constants.Features.Validation,
     Name = "Validation",
     Category = "Workflows",
