@@ -59,3 +59,7 @@ Prepend the entered string to the output keys.
 #### Ignored
 
 Allows the user to specify fields which should not be added to the `Output`. e.g.: form validation token.
+
+### Template Email
+
+Send an email using a pre-defined template for the layout of the email. Content editors can focus on the body of the email instead of having to move around large chunks of HTML. To get this to work, the template must use `{{ Body }}` to signify where the body content should be inserted within the template.

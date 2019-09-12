@@ -1,0 +1,10 @@
+﻿@using OrchardCore.Workflows.Helpers
+@using OrchardCore.Workflows.ViewModels
+@using Etch.OrchardCore.Workflows.TemplateEmail.Workflows.Activities
+
+@model ActivityViewModel<TemplateEmailTask>
+
+<header>
+    <h4><i class="fa fa-envelope"></i>@Model.Activity.GetTitleOrDefault(() => T["Send Template Email"])</h4>
+</header>
+<em>&quot;@Model.Activity.Subject&quot;</em>
