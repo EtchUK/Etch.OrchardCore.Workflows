@@ -4,7 +4,7 @@ Module for [Orchard Core](https://github.com/OrchardCMS/OrchardCore) provides us
 
 ## Build Status
 
-_Internal module that isn't currently publically available._
+[![Build Status](https://secure.travis-ci.org/etchuk/Etch.OrchardCore.Workflows.png?branch=master)](http://travis-ci.org/etchuk/Etch.OrchardCore.Workflows) [![NuGet](https://img.shields.io/nuget/v/Etch.OrchardCore.Workflows.svg)](https://www.nuget.org/packages/Etch.OrchardCore.Workflows)
 
 ## Orchard Core Reference
 
@@ -12,11 +12,9 @@ This module is referencing the beta 3 build of Orchard Core ([`1.0.0-beta3-71077
 
 ## Installing
 
-This module is available on our private NuGet feed, search "Etch.OrchardCore.Workflows" within NuGet package manager in order to install the module within your Orchard Core site project. Your project must be configured to use our private NuGet feed otherwise no results will be returned.
+This module is [available on NuGet](https://www.nuget.org/packages/Etch.OrchardCore.Workflows). Add a reference to your Orchard Core web project via the NuGet package manager. Search for "Etch.OrchardCore.Workflows", ensuring include prereleases is checked.
 
-If you want to give the module a try you can[download the source](https://github.com/etchuk/Etch.OrchardCore.InjectScripts/archive/master.zip) or clone the repository to your local machine. Add the project to your solution that contains an Orchard Core project and add a reference to Etch.OrchardCore.Workflows.
-
-Once the module is in a usable state we'll make it available via NuGet.
+Alternatively you can [download the source](https://github.com/etchuk/Etch.OrchardCore.Workflows/archive/master.zip) or clone the repository to your local machine. Add the project to your solution that contains an Orchard Core project and add a reference to Etch.OrchardCore.Workflows.
 
 ## Features
 
