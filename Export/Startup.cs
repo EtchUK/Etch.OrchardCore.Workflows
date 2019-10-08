@@ -15,19 +15,19 @@ namespace Etch.OrchardCore.Workflows.Export
 
         #region Implementation
 
-        public override void Configure(IApplicationBuilder app, IRouteBuilder routes, IServiceProvider serviceProvider)
+        public override void Configure(IApplicationBuilder app, IEndpointRouteBuilder routes, IServiceProvider serviceProvider)
         {
-            routes.MapAreaRoute(
+            routes.MapAreaControllerRoute(
                 name: "WorkflowExport",
                 areaName: "Etch.OrchardCore.Workflows",
-                template: "Admin/Workflows/Export",
+                pattern: "Admin/Workflows/Export",
                 defaults: new { controller = "Export", action = "Index" }
             );
 
-            routes.MapAreaRoute(
+            routes.MapAreaControllerRoute(
                 name: "WorkflowExportPreview",
                 areaName: "Etch.OrchardCore.Workflows",
-                template: "Admin/Workflows/Export/{id}/Preview",
+                pattern: "Admin/Workflows/Export/{id}/Preview",
                 defaults: new { controller = "Export", action = "Preview" }
             );
         }

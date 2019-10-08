@@ -8,7 +8,6 @@ using OrchardCore.Workflows.Activities;
 using OrchardCore.Workflows.Models;
 using OrchardCore.Workflows.Services;
 using System.Collections.Generic;
-using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace Etch.OrchardCore.Workflows.TemplateEmail.Workflows.Activities
@@ -38,6 +37,8 @@ namespace Etch.OrchardCore.Workflows.TemplateEmail.Workflows.Activities
         }
 
         private IStringLocalizer T { get; }
+
+        public override LocalizedString DisplayText => T["Template Email Task"];
         public override string Name => nameof(TemplateEmailTask);
         public override LocalizedString Category => T["Messaging"];
 
@@ -110,11 +111,11 @@ namespace Etch.OrchardCore.Workflows.TemplateEmail.Workflows.Activities
                 IsBodyHtml = IsBodyHtml
             };
 
-            message.To.Add(recipientsTask.Result.Trim());
+            message.To = recipientsTask.Result.Trim();
 
             if (!string.IsNullOrWhiteSpace(senderTask.Result))
             {
-                message.From = new MailAddress(senderTask.Result.Trim());
+                message.From = senderTask.Result.Trim();
             }
 
             var result = await _smtpService.SendAsync(message);

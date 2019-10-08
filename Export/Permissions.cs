@@ -1,5 +1,7 @@
 ﻿using OrchardCore.Security.Permissions;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Etch.OrchardCore.Workflows.Export
 {
@@ -10,7 +12,6 @@ namespace Etch.OrchardCore.Workflows.Export
         public static readonly Permission ExportWorkflows = new Permission("ExportWorkflows", "Export workflow data");
 
         #endregion Permissions
-
 
         #region Implementation
 
@@ -26,9 +27,9 @@ namespace Etch.OrchardCore.Workflows.Export
             };
         }
 
-        public IEnumerable<Permission> GetPermissions()
+        public Task<IEnumerable<Permission>> GetPermissionsAsync()
         {
-            return new[] { ExportWorkflows };
+            return Task.FromResult(new[] { ExportWorkflows }.AsEnumerable());
         }
 
         #endregion Implementation
