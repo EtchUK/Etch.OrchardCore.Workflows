@@ -48,6 +48,8 @@ namespace Etch.OrchardCore.Workflows.FormOutput.Workflows.Activities
 
         #region Public
 
+        public override LocalizedString DisplayText => T["Form Output Task"];
+
         public override string Name => nameof(FormOutputTask);
 
         public override LocalizedString Category => T["Primitives"];
@@ -59,13 +61,13 @@ namespace Etch.OrchardCore.Workflows.FormOutput.Workflows.Activities
         public string Ignored
         {
             get => GetProperty<string>();
-            set => SetProperty(value);
+            set => SetProperty(value ?? string.Empty);
         }
 
         public string Prefix
         {
             get => GetProperty<string>();
-            set => SetProperty(value);
+            set => SetProperty(value ?? string.Empty);
         }
 
         #endregion Input

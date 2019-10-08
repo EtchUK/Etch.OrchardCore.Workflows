@@ -51,6 +51,7 @@ namespace Etch.OrchardCore.Workflows.Validation.Workflows.Activities
 
         #region Properties
 
+        public override LocalizedString DisplayText => T["Validate Required When Checked Task"];
         public override string Name => nameof(ValidateRequiredWhenCheckedTask);
 
         public override LocalizedString Category => T["Validation"];

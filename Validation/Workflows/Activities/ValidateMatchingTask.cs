@@ -52,6 +52,8 @@ namespace Etch.OrchardCore.Workflows.Validation.Workflows.Activities
 
         #region Properties
 
+        public override LocalizedString DisplayText => T["Validate Matching Task"];
+
         public override string Name => nameof(ValidateMatchingTask);
 
         public override LocalizedString Category => T["Validation"];
