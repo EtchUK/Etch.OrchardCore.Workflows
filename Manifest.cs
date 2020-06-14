@@ -6,7 +6,7 @@ using OrchardCore.Modules.Manifest;
     Category = "Workflows",
     Description = "Provides useful workflow tasks and events",
     Name = "Etch Workflows",
-    Version = "0.2.0",
+    Version = "0.3.0",
     Website = "https://etchuk.com"
 )]
 
