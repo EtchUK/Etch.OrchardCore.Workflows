@@ -86,10 +86,10 @@ namespace Etch.OrchardCore.Workflows.TemplateEmail.Workflows.Activities
 
         public override async Task<ActivityExecutionResult> ExecuteAsync(WorkflowExecutionContext workflowContext, ActivityContext activityContext)
         {
-            var senderTask = _expressionEvaluator.EvaluateAsync(Sender, workflowContext);
-            var recipientsTask = _expressionEvaluator.EvaluateAsync(Recipients, workflowContext);
-            var subjectTask = _expressionEvaluator.EvaluateAsync(Subject, workflowContext);
-            var body = await _expressionEvaluator.EvaluateAsync(Body, workflowContext);
+            var senderTask = _expressionEvaluator.EvaluateAsync(Sender, workflowContext, null);
+            var recipientsTask = _expressionEvaluator.EvaluateAsync(Recipients, workflowContext, null);
+            var subjectTask = _expressionEvaluator.EvaluateAsync(Subject, workflowContext, null);
+            var body = await _expressionEvaluator.EvaluateAsync(Body, workflowContext, null);
 
             if (!string.IsNullOrEmpty(TemplateName))
             {
