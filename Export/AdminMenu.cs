@@ -31,8 +31,8 @@ namespace Etch.OrchardCore.Workflows.Export
                 return Task.CompletedTask;
             }
 
-            builder.Add(T["Workflow Export"], "5.1", workflowExport => workflowExport
-                .AddClass("workflows").Id("workflows-export").Action("Index", "Export", new { area = "Etch.OrchardCore.Workflows" })
+            builder.Add(T["Workflow Export"], "15.1", workflowExport => workflowExport
+                .AddClass("workflowexport").Id("workflowexport").Action("Index", "Export", new { area = "Etch.OrchardCore.Workflows" })
                 .Permission(Permissions.ExportWorkflows)
                 .LocalNav());
 

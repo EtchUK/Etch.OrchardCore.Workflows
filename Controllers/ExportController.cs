@@ -61,6 +61,7 @@ namespace Etch.OrchardCore.Workflows.Controllers
             _exportService = exportService;
             TH = htmlLocalizer;
             _logger = logger;
+            _notifier = notifier;
             _session = session;
             New = shapeFactory;
             _siteService = siteService;
