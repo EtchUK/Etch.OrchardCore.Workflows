@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using OrchardCore.Workflows.Models;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace Etch.OrchardCore.Workflows.Export.Services
 
             var memoryStream = new MemoryStream();
             var streamWriter = new StreamWriter(memoryStream);
-            var csvWriter = new CsvWriter(streamWriter);
+            var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
 
             await WriteHeadersAsync(csvWriter, headers);
             await WriteRowsAsync(csvWriter, headers, rows);
@@ -32,23 +33,23 @@ namespace Etch.OrchardCore.Workflows.Export.Services
             return memoryStream;
         }
 
-        public IDictionary<string, string> GetOutput(Workflow workflow)
+        public IDictionary<string, string> GetOutput(Workflow instance)
         {
             var result = (IDictionary<string, string>)new Dictionary<string, string>();
 
-            if (workflow == null)
+            if (instance == null)
             {
                 return result;
             }
 
-            result.Add(ExportConstants.CreatedAtUTCColumnName, workflow.CreatedUtc.ToString());
+            result.Add(ExportConstants.CreatedAtUTCColumnName, instance.CreatedUtc.ToString());
 
-            if (workflow.State == null)
+            if (instance.State == null)
             {
                 return result;
             }
 
-            var output = workflow.State.Value<JObject>("Output");
+            var output = instance.State.Value<JObject>("Output");
 
             if (output == null)
             {
@@ -67,12 +68,12 @@ namespace Etch.OrchardCore.Workflows.Export.Services
 
         #region Private Methods
 
-        private IList<string> GetHeaders(IList<IDictionary<string, string>> rows)
+        private static IList<string> GetHeaders(IList<IDictionary<string, string>> rows)
         {
             return rows.SelectMany(x => x.Keys).Distinct().ToList();
         }
 
-        private async Task WriteHeadersAsync(CsvWriter csvWriter, IList<string> headers)
+        private static async Task WriteHeadersAsync(CsvWriter csvWriter, IList<string> headers)
         {
             foreach (var header in headers)
             {
@@ -81,7 +82,7 @@ namespace Etch.OrchardCore.Workflows.Export.Services
             await csvWriter.NextRecordAsync();
         }
 
-        private async Task WriteRowsAsync(CsvWriter csvWriter, IList<string> headers, List<IDictionary<string, string>> rows)
+        private static async Task WriteRowsAsync(CsvWriter csvWriter, IList<string> headers, List<IDictionary<string, string>> rows)
         {
             foreach (var row in rows)
             {
