@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.3.0</Version>
+    <Version>$(VersionNumber)</Version>
     <PackageId>Etch.OrchardCore.Workflows</PackageId>
     <Title>Etch Workflows</Title>
     <Authors>Etch UK Ltd.</Authors>
@@ -13,17 +13,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="27.2.1" />
-    <PackageReference Include="OrchardCore.Admin.Abstractions" Version="1.4.0" />
-    <PackageReference Include="OrchardCore.ContentManagement" Version="1.4.0" />
-    <PackageReference Include="OrchardCore.DisplayManagement" Version="1.4.0" />
-    <PackageReference Include="OrchardCore.Email" Version="1.4.0" />
-    <PackageReference Include="OrchardCore.Email.Abstractions" Version="1.4.0" />
-    <PackageReference Include="OrchardCore.Navigation" Version="1.4.0" />
-    <PackageReference Include="OrchardCore.ResourceManagement" Version="1.4.0" />
-    <PackageReference Include="OrchardCore.Module.Targets" Version="1.4.0" />
-    <PackageReference Include="OrchardCore.Templates" Version="1.4.0" />
-    <PackageReference Include="OrchardCore.Workflows" Version="1.4.0" />
+    <EmbeddedResource Remove=".gitignore" />
+    <EmbeddedResource Remove="azure-pipelines.yml" />
+    <EmbeddedResource Remove="nuget.config" />
+    <EmbeddedResource Remove="LICENSE.md" />
+    <EmbeddedResource Remove="README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+    <PackageReference Include="OrchardCore.Admin.Abstractions" Version="1.5.0" />
+    <PackageReference Include="OrchardCore.ContentManagement" Version="1.5.0" />
+    <PackageReference Include="OrchardCore.DisplayManagement" Version="1.5.0" />
+    <PackageReference Include="OrchardCore.Email" Version="1.5.0" />
+    <PackageReference Include="OrchardCore.Email.Abstractions" Version="1.5.0" />
+    <PackageReference Include="OrchardCore.Navigation" Version="1.5.0" />
+    <PackageReference Include="OrchardCore.ResourceManagement" Version="1.5.0" />
+    <PackageReference Include="OrchardCore.Module.Targets" Version="1.5.0" />
+    <PackageReference Include="OrchardCore.Templates" Version="1.5.0" />
+    <PackageReference Include="OrchardCore.Workflows" Version="1.5.0" />
   </ItemGroup>
 
   <ItemGroup>
