@@ -22,16 +22,16 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="30.0.1" />
-    <PackageReference Include="OrchardCore.Admin.Abstractions" Version="1.6.0" />
-    <PackageReference Include="OrchardCore.ContentManagement" Version="1.6.0" />
-    <PackageReference Include="OrchardCore.DisplayManagement" Version="1.6.0" />
-    <PackageReference Include="OrchardCore.Email" Version="1.6.0" />
-    <PackageReference Include="OrchardCore.Email.Abstractions" Version="1.6.0" />
-    <PackageReference Include="OrchardCore.Navigation" Version="1.6.0" />
-    <PackageReference Include="OrchardCore.ResourceManagement" Version="1.6.0" />
-    <PackageReference Include="OrchardCore.Module.Targets" Version="1.6.0" />
-    <PackageReference Include="OrchardCore.Templates" Version="1.6.0" />
-    <PackageReference Include="OrchardCore.Workflows" Version="1.6.0" />
+    <PackageReference Include="OrchardCore.Admin.Abstractions" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.ContentManagement" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.DisplayManagement" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Email" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Email.Abstractions" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Navigation" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.ResourceManagement" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Module.Targets" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Templates" Version="1.7.2" />
+    <PackageReference Include="OrchardCore.Workflows" Version="1.7.2" />
   </ItemGroup>
 
   <ItemGroup>

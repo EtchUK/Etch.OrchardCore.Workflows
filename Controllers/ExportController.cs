@@ -1,4 +1,5 @@
-﻿using Etch.OrchardCore.Workflows.Export;
+using Dapper;
+using Etch.OrchardCore.Workflows.Export;
 using Etch.OrchardCore.Workflows.Export.Services;
 using Etch.OrchardCore.Workflows.Export.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OrchardCore.Admin;
 using OrchardCore.DisplayManagement;
 using OrchardCore.DisplayManagement.Notify;
@@ -78,8 +80,7 @@ namespace Etch.OrchardCore.Workflows.Controllers
             var siteSettings = await _siteService.GetSiteSettingsAsync();
             var pager = new Pager(pagerParameters, siteSettings.PageSize);
 
-            var query = _session.Query<WorkflowType, WorkflowTypeIndex>()
-                .OrderBy(x => x.Name);
+            var query = _session.Query<WorkflowType, WorkflowTypeIndex>();
 
             var count = await query.CountAsync();
 
@@ -87,11 +88,17 @@ namespace Etch.OrchardCore.Workflows.Controllers
                 .Skip(pager.GetStartIndex())
                 .Take(pager.PageSize)
                 .ListAsync();
-            var workflowTypeIds = workflowTypes.Select(x => x.WorkflowTypeId).ToList();
-            var workflowInstances = (await _session.QueryIndex<WorkflowIndex>(x => x.WorkflowTypeId.IsIn(workflowTypeIds))
-                .ListAsync())
-                .GroupBy(x => x.WorkflowTypeId)
-                .ToDictionary(x => x.Key);
+
+            var connection = await _session.CreateConnectionAsync();
+
+            var dialect = _session.Store.Configuration.SqlDialect;
+            var sqlBuilder = dialect.CreateBuilder(_session.Store.Configuration.TablePrefix);
+            sqlBuilder.Select();
+            sqlBuilder.Distinct();
+            sqlBuilder.Selector(nameof(WorkflowIndex.WorkflowTypeId));
+            sqlBuilder.Table(nameof(WorkflowIndex), alias: null, _session.Store.Configuration.Schema);
+
+            var workflowTypeIdsWithInstances = await connection.QueryAsync<string>(sqlBuilder.ToSqlString());
 
             var pagerShape = (await New.Pager(pager)).TotalItemCount(count);
 
@@ -103,11 +110,12 @@ namespace Etch.OrchardCore.Workflows.Controllers
                     WorkflowType = x,
                     Id = x.Id,
                     Name = x.Name,
-                    WorkflowCount = workflowInstances.ContainsKey(x.WorkflowTypeId) ? workflowInstances[x.WorkflowTypeId].Count() : 0
+                    HasInstances = workflowTypeIdsWithInstances.Contains(x.WorkflowTypeId)
                 })
                 .ToList(),
                 Pager = pagerShape
             };
+
             return View(model);
         }
 
@@ -180,7 +188,7 @@ namespace Etch.OrchardCore.Workflows.Controllers
             }
             catch (Exception e)
             {
-                _notifier.Error(TH["Error creating export file, please try again."]);
+                await _notifier.ErrorAsync(TH["Error creating export file, please try again."]);
                 _logger.LogError(e, "Error creating file for Workflow Export");
                 return RedirectToAction("Preview", new { id });
             }
